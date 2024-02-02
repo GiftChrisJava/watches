@@ -1,28 +1,25 @@
 "use server";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export async function addWatch(formData) {
-  // getting data from the form
   const model = formData.get("model");
   const brand = formData.get("brand");
   const referenceNumber = formData.get("referenceNumber");
 
   const cookieStore = cookies();
-  const supabase = createClientComponentClient({ cookies: () => cookieStore });
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const {
     data: { session },
   } = await supabase.auth.getSession();
   const user = session?.user;
 
-  // check if user is authenticated
   if (!user) {
-    console.error("User not authenticated within addWatch server action");
+    console.error("User is not authenticated within addWatch server action");
     return;
   }
 
-  // insert data into the table
   const { data, error } = await supabase.from("watches").insert([
     {
       model,
@@ -37,7 +34,6 @@ export async function addWatch(formData) {
     return;
   }
 
-  // if success
   revalidatePath("/watch-list");
 
   return { message: "Success" };

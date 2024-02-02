@@ -1,12 +1,12 @@
 import { cookies } from "next/headers";
 import EditWatch from "../components/EditWatch";
 import WatchForm from "../components/WatchForm";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { deleteWatch } from "../server-actions/deleteWatch";
 
 export default async function WatchList() {
   const cookieStore = cookies();
-  const supabase = createClientComponentClient({ cookies: () => cookieStore });
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -15,14 +15,12 @@ export default async function WatchList() {
   const { data: watches, error } = await supabase
     .from("watches")
     .select("*")
-    .eq("user_id", "user.id")
+    .eq("user_id", user.id)
     .order("brand", { ascending: true });
 
   if (error) {
     console.error("Error fetching watches");
   }
-
-  console.log(watches);
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-300">
@@ -34,38 +32,37 @@ export default async function WatchList() {
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg"
+              className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
             >
-              Sign Out
+              Sign out
             </button>
           </form>
         </div>
         <WatchForm />
-      </div>
-
-      <div className="mb-6">
-        {watches.map((watch) => (
-          <div
-            key={watch.id}
-            className="mb-4 p-4 bg-gray-800 rounded-lg shadow-lg"
-          >
-            <h2 className="text-xl text-white mb-2">
-              {watch.brand} - {watch.name}
-            </h2>
-            <div className="flex space-x-2">
-              <form action={deleteWatch}>
-                <input type="hidden" name="id" value={watch.id} />
-                <button
-                  type="submit"
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg"
-                >
-                  Delete
-                </button>
-              </form>
-              <EditWatch watch={watch} />
+        <div className="mt-6">
+          {watches.map((watch) => (
+            <div
+              key={watch.id}
+              className="mb-4 p-4 bg-gray-800 rounded-lg shadow"
+            >
+              <h2 className="text-xl text-white mb-2">
+                {watch.brand} - {watch.model}
+              </h2>
+              <div className="flex space-x-2">
+                <form action={deleteWatch}>
+                  <input type="hidden" name="id" value={watch.id} />
+                  <button
+                    type="submit"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Delete
+                  </button>
+                </form>
+                <EditWatch watch={watch} />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
