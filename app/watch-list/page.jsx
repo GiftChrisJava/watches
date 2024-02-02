@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import EditWatch from "../components/EditWatch";
 import WatchForm from "../components/WatchForm";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { deleteWatch } from "../server-actions/deleteWatch";
 
 export default async function WatchList() {
   const cookieStore = cookies();
@@ -43,7 +44,7 @@ export default async function WatchList() {
       </div>
 
       <div className="mb-6">
-        {/* {watches.map((watch) => (
+        {watches.map((watch) => (
           <div
             key={watch.id}
             className="mb-4 p-4 bg-gray-800 rounded-lg shadow-lg"
@@ -52,7 +53,7 @@ export default async function WatchList() {
               {watch.brand} - {watch.name}
             </h2>
             <div className="flex space-x-2">
-              <form action="deleteWatch">
+              {/* <form action={deleteWatch}>
                 <input type="hidden" name="id" value={watch.id} />
                 <button
                   type="submit"
@@ -60,11 +61,11 @@ export default async function WatchList() {
                 >
                   Delete
                 </button>
-              </form>
+              </form> */}
               <EditWatch watch={watch} />
             </div>
           </div>
-        ))} */}
+        ))}
       </div>
     </div>
   );
