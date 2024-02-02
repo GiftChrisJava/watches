@@ -44,7 +44,7 @@ export default async function WatchList() {
       </div>
 
       <div className="mb-6">
-        {/* {watches.map((watch) => (
+        {watches.map((watch) => (
           <div
             key={watch.id}
             className="mb-4 p-4 bg-gray-800 rounded-lg shadow-lg"
@@ -65,7 +65,7 @@ export default async function WatchList() {
               <EditWatch watch={watch} />
             </div>
           </div>
-        ))} */}
+        ))}
       </div>
     </div>
   );
