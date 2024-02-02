@@ -1,8 +1,9 @@
 import React from "react";
+import { addWatch } from "../server-actions/addWatch";
 
 export default function WatchForm() {
   return (
-    <form action="addWatch" className="mb-6">
+    <form action={addWatch} className="mb-6">
       <div className="mb-4">
         <label className="block text-white mb-2" htmlFor="brand">
           Brand
