@@ -1,8 +1,28 @@
+import { cookies } from "next/headers";
 import EditWatch from "../components/EditWatch";
 import WatchForm from "../components/WatchForm";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export default function WatchList() {
-  const watches = [];
+export default async function WatchList() {
+  const cookieStore = cookies();
+  const supabase = createClientComponentClient({ cookies: () => cookieStore });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user;
+
+  const { data: watches, error } = await supabase
+    .from("watches")
+    .select("*")
+    .eq("user_id", "user.id")
+    .order("brand", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching watches");
+  }
+
+  console.log(watches);
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-300">
       <div className="container mx-auto p-6 sm:p-12">
@@ -23,7 +43,7 @@ export default function WatchList() {
       </div>
 
       <div className="mb-6">
-        {watches.map((watch) => (
+        {/* {watches.map((watch) => (
           <div
             key={watch.id}
             className="mb-4 p-4 bg-gray-800 rounded-lg shadow-lg"
@@ -44,7 +64,7 @@ export default function WatchList() {
               <EditWatch watch={watch} />
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );
