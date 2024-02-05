@@ -13,7 +13,7 @@ export async function middleware(req) {
 
   // if user is authenticated send to watch-list page
   if (user && req.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/watch-list", req.url));
+    return NextResponse.redirect(new URL("/videos", req.url));
   }
 
   // if not logged in and not going to the home route, the redirect to home route
@@ -26,5 +26,5 @@ export async function middleware(req) {
 
 // run this middleware on these routes
 export const config = {
-  matcher: ["/", "/watch-list"],
+  matcher: ["/", "/videos"],
 };
